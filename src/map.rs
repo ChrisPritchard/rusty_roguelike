@@ -27,8 +27,8 @@ impl Map {
             for x in camera.left_x..camera.right_x {
                 if self.in_bounds(Point::new(x, y)) {
                     match self.tiles[map_idx(x, y)] {
-                        TileType::Floor => ctx.set(x - camera.left_x, y - camera.top_y, YELLOW, BLACK, to_cp437('.')),
-                        TileType::Wall => ctx.set(x - camera.left_x, y - camera.top_y, GREEN, BLACK, to_cp437('#')),
+                        TileType::Floor => ctx.set(x - camera.left_x, y - camera.top_y, WHITE, BLACK, to_cp437('.')),
+                        TileType::Wall => ctx.set(x - camera.left_x, y - camera.top_y, WHITE, BLACK, to_cp437('#')),
                     }
                 }
             }
