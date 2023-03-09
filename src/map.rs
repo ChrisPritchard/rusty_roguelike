@@ -21,20 +21,6 @@ impl Map {
         Self { tiles: vec![TileType::Floor; NUM_TILES] }
     }
 
-    pub fn render(&self, ctx: &mut BTerm, camera: &Camera) {
-        ctx.set_active_console(0);
-        for y in camera.top_y..camera.bottom_y {
-            for x in camera.left_x..camera.right_x {
-                if self.in_bounds(Point::new(x, y)) {
-                    match self.tiles[map_idx(x, y)] {
-                        TileType::Floor => ctx.set(x - camera.left_x, y - camera.top_y, WHITE, BLACK, to_cp437('.')),
-                        TileType::Wall => ctx.set(x - camera.left_x, y - camera.top_y, WHITE, BLACK, to_cp437('#')),
-                    }
-                }
-            }
-        }
-    }
-
     fn in_bounds(&self, p: Point) -> bool {
         p.x >= 0 && p.x < SCREEN_WIDTH && p.y >= 0 && p.y < SCREEN_HEIGHT
     }
