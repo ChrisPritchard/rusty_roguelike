@@ -43,7 +43,8 @@ impl GameState for State {
 
         self.resources.insert(ctx.key);
         let current_state = self.resources.get::<TurnState>().unwrap().clone();
-        self.systems[current_state].execute(&mut self.ecs, &mut self.resources);
+        self.systems.entry(current_state).and_modify(|schedule| 
+            schedule.execute(&mut self.ecs, &mut self.resources));
         render_draw_buffer(ctx).expect("Render error");
 
         if let Some(VirtualKeyCode::Escape) = ctx.key {
@@ -66,7 +67,13 @@ impl State {
         resources.insert(Camera::new(map_builder.player_start));
         resources.insert(TurnState::AwaitingInput);
 
-        Self { ecs, resources, systems: build_scheduler() }
+        let systems = HashMap::from([
+           (TurnState::AwaitingInput, build_input_scheduler()), 
+           (TurnState::PlayerTurn, build_player_scheduler()),
+           (TurnState::EnemyTurn, build_enemy_scheduler()),
+        ]);
+
+        Self { ecs, resources, systems }
     }
 }
 

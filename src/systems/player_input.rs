@@ -6,7 +6,8 @@ use crate::prelude::*;
 pub fn player_input(ecs: &mut SubWorld, 
         #[resource] map: &Map, 
         #[resource] key: &Option<VirtualKeyCode>, 
-        #[resource] camera: &mut Camera) {
+        #[resource] camera: &mut Camera,
+        #[resource] turn_state: &mut TurnState) {
 
     if let Some(key) = key {
         let delta = 
@@ -23,6 +24,7 @@ pub fn player_input(ecs: &mut SubWorld,
             if map.can_enter_tile(next_position) {
                 *pos = next_position;
                 camera.on_player_move(next_position);
+                *turn_state = TurnState::PlayerTurn;
             }
         });
     }
