@@ -17,6 +17,7 @@ pub fn spawn_monster(ecs: &mut World, pos: Point, monster_type: i32) {
     ecs.push(
         (
             Enemy,
+            MovesRandomly,
             pos,
             Render{
                 color: ColorPair::new(WHITE, BLACK),
