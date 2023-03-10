@@ -21,7 +21,7 @@ impl Map {
         Self { tiles: vec![TileType::Floor; NUM_TILES] }
     }
 
-    fn in_bounds(&self, p: Point) -> bool {
+    pub fn in_bounds(&self, p: Point) -> bool {
         p.x >= 0 && p.x < SCREEN_WIDTH && p.y >= 0 && p.y < SCREEN_HEIGHT
     }
 
