@@ -36,9 +36,11 @@ struct State {
 
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
-        ctx.set_active_console(0);
+        ctx.set_active_console(0); // background / dungeon tiles
         ctx.cls();
-        ctx.set_active_console(1);
+        ctx.set_active_console(1); // player, monsters, items
+        ctx.cls();
+        ctx.set_active_console(2); // ui / hud
         ctx.cls();
 
         self.resources.insert(ctx.key);
@@ -86,8 +88,10 @@ fn main() -> BError {
         .with_tile_dimensions(32, 32)
         .with_resource_path("resources/")
         .with_font("dungeonfont.png", 32, 32)
+        .with_font("terminal8x8.png", 8, 8)
         .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png")
         .with_simple_console_no_bg(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png")
+        .with_simple_console_no_bg(SCREEN_WIDTH*2, SCREEN_HEIGHT*2, "terminal8x8.png") // four times as many characters as normal with this font
         .build()?;
     main_loop(context, State::new())
 }
