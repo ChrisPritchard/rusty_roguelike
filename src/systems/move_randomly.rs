@@ -18,6 +18,7 @@ pub fn move_randomly(
                 _ => Point::new(0, 1),
             };
             let np = *p + delta;
-            commands.push(((), WantsToMove { entity: *e, destination: np}));
+            // feels a bit wonky to assign to a otherwise empty entity. could be masked behind a function, e.g. send_message?
+            commands.push(((), WantsToMove { entity: *e, destination: np})); 
         });
 }
