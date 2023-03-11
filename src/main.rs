@@ -44,6 +44,9 @@ impl GameState for State {
         ctx.cls();
 
         self.resources.insert(ctx.key);
+        ctx.set_active_console(0);
+        self.resources.insert(Point::from_tuple(ctx.mouse_pos()));
+
         let current_state = self.resources.get::<TurnState>().unwrap().clone();
         self.systems.entry(current_state).and_modify(|schedule| 
             schedule.execute(&mut self.ecs, &mut self.resources));
@@ -63,7 +66,13 @@ impl State {
         let map_builder = MapBuilder::new(&mut rng);
 
         spawn_player(&mut ecs, map_builder.player_start);
-        map_builder.rooms.iter().skip(1).for_each(|r| spawn_monster(&mut ecs, r.center(), rng.range(0, 4)) );
+        map_builder.rooms.iter().skip(1).for_each(|r| {
+            let monster_type = match rng.roll_dice(1, 10) {
+                1..=8 => 0, // goblin
+                _ => 1 // orc
+            };
+            spawn_monster(&mut ecs, r.center(), monster_type);
+        });
         
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
