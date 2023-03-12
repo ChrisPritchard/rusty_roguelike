@@ -9,7 +9,7 @@ pub fn tooltips(
     #[resource] mouse_pos: &Point,
     #[resource] camera: &Camera,
 ) {
-    let mut positions = <(Entity, &Point, &Name)>::query();
+    let mut positions = <(Entity, &Point, &Name)>::query(); // every entity that has a name and a position (not necessarily just enemies)
     let offset = Point::new(camera.left_x, camera.top_y);
     let map_pos = *mouse_pos + offset;
     let mut draw_batch = DrawBatch::new();
@@ -22,9 +22,9 @@ pub fn tooltips(
             let screen_pos = *mouse_pos * 4;
             let display = 
                 if let Ok(health) = ecs.entry_ref(*entity).unwrap().get_component::<Health>() {
-                    format!("{} : {} hp", &name.0, health.current)
+                    format!("{} : {} hp", &name.0, health.current) // if they have health as well (e.g. enemies) print that
                 } else {
-                    name.0.clone()
+                    name.0.clone() // else just the name (e.g. items)
                 };
             
             draw_batch.print(screen_pos, &display);
