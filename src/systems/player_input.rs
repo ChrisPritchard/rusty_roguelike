@@ -9,21 +9,29 @@ pub fn player_input(
         #[resource] key: &Option<VirtualKeyCode>,
         #[resource] turn_state: &mut TurnState) {
 
-    let mut players = <(Entity, &Point)>::query().filter(component::<Player>());
-
-    if let Some(key) = *key {
-        let delta = match key {
-            VirtualKeyCode::Left => Point::new(-1, 0),
-            VirtualKeyCode::Right => Point::new(1, 0),
-            VirtualKeyCode::Up => Point::new(0, -1),
-            VirtualKeyCode::Down => Point::new(0, 1),
-            _ => return,
-        };
-                
-        players.iter(ecs).for_each(| (entity, pos) | {
-            let destination = *pos + delta;
-            commands.push(((), WantsToMove{ entity: *entity, destination }));
-        });
-        *turn_state = TurnState::PlayerTurn;
+    if (*key).is_none() {
+        return;
     }
+
+    let delta = match (*key).unwrap() {
+        VirtualKeyCode::Left => Point::new(-1, 0),
+        VirtualKeyCode::Right => Point::new(1, 0),
+        VirtualKeyCode::Up => Point::new(0, -1),
+        VirtualKeyCode::Down => Point::new(0, 1),
+        _ => return,
+    };
+
+    let (player, player_target) = <(Entity, &Point)>::query().filter(component::<Player>())
+        .iter(ecs).find_map(|(e, p)| Some((e, *p + delta))).unwrap();
+
+    let enemy = <(Entity, &Point)>::query().filter(component::<Enemy>())
+        .iter(ecs).filter(|(_, p)| **p == player_target).find_map(|(e, _)| Some(e));
+
+    if let Some(enemy) = enemy {
+        commands.push(((), WantsToAttack{ attacker: *player, victim: *enemy }));
+    } else {
+        commands.push(((), WantsToMove{ entity: *player, destination: player_target }));
+    }
+    
+    *turn_state = TurnState::PlayerTurn;
 }
