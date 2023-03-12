@@ -16,12 +16,6 @@ pub struct Enemy;
 pub struct MovesRandomly;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct WantsToMove {
-    pub entity: Entity,
-    pub destination: Point,
-}
-
-#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Health {
     pub current: i32,
     pub max: i32,
@@ -36,3 +30,18 @@ impl Health {
 #[repr(transparent)]
 #[derive(Clone, PartialEq)]
 pub struct Name(pub String);
+
+// these below are 'messages', components added to otherwise empty entities that a read and then removed
+
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct WantsToMove {
+    pub entity: Entity,
+    pub destination: Point,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct WantsToAttack {
+    pub attacker: Entity,
+    pub victim: Point,
+}
