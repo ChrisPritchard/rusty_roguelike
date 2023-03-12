@@ -38,6 +38,8 @@ pub fn build_enemy_scheduler() -> Schedule {
     Schedule::builder()
         .add_system(move_randomly::move_randomly_system())
         .flush()
+        .add_system(combat::combat_system())
+        .flush()
         .add_system(movement::movement_system())
         .flush()
         .add_system(map_render::map_render_system())
