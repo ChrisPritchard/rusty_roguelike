@@ -67,11 +67,12 @@ impl State {
 
         spawn_player(&mut ecs, map_builder.player_start);
         map_builder.rooms.iter().skip(1).for_each(|r| {
-            let monster_type = match rng.roll_dice(1, 10) {
-                1..=8 => 0, // goblin
-                _ => 1 // orc
+            let pos = r.center();
+            match rng.roll_dice(1, 10) {
+                1..=6 => spawn_goblin(&mut ecs, pos),
+                7..=8 => spawn_drunk_goblin(&mut ecs, pos),
+                _ => spawn_orc(&mut ecs, pos)
             };
-            spawn_monster(&mut ecs, r.center(), monster_type);
         });
         
         resources.insert(map_builder.map);

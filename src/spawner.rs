@@ -14,12 +14,23 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
     );
 }
 
-pub fn spawn_monster(ecs: &mut World, pos: Point, monster_type: i32) {
-    let (hp, name, glyph) = match monster_type {
-        0 => spawn_goblin(),
-        _ => spawn_orc(),
-    };
+pub fn spawn_goblin(ecs: &mut World, pos: Point) {
+    ecs.push(
+        (
+            Enemy,
+            ChasingPlayer,
+            pos,
+            Render{
+                color: ColorPair::new(WHITE, BLACK),
+                glyph: to_cp437('g')
+            },
+            Name("Goblin".to_string()),
+            Health::new(1)
+        )
+    );
+}
 
+pub fn spawn_drunk_goblin(ecs: &mut World, pos: Point) {
     ecs.push(
         (
             Enemy,
@@ -27,18 +38,26 @@ pub fn spawn_monster(ecs: &mut World, pos: Point, monster_type: i32) {
             pos,
             Render{
                 color: ColorPair::new(WHITE, BLACK),
-                glyph
+                glyph: to_cp437('g')
             },
-            name,
-            hp
+            Name("Drunk Goblin".to_string()),
+            Health::new(2)
         )
     );
 }
 
-fn spawn_goblin() -> (Health, Name, FontCharType) {
-    (Health::new(1), Name("Goblin".to_string()), to_cp437('g'))
-}
-
-fn spawn_orc() -> (Health, Name, FontCharType) {
-    (Health::new(2), Name("Orc".to_string()), to_cp437('o'))
+pub fn spawn_orc(ecs: &mut World, pos: Point) {
+    ecs.push(
+        (
+            Enemy,
+            ChasingPlayer,
+            pos,
+            Render{
+                color: ColorPair::new(WHITE, BLACK),
+                glyph: to_cp437('o')
+            },
+            Name("Orc".to_string()),
+            Health::new(2)
+        )
+    );
 }
