@@ -48,11 +48,12 @@ impl GameState for State {
         self.resources.insert(Point::from_tuple(ctx.mouse_pos()));
 
         let current_state = self.resources.get::<TurnState>().unwrap().clone();
-        if current_state == TurnState::GameOver {
-            self.game_over(ctx)
-        } else {
-            self.systems.entry(current_state).and_modify(|schedule| 
-                schedule.execute(&mut self.ecs, &mut self.resources));
+        match current_state {
+            TurnState::GameOver => self.game_over(ctx),
+            TurnState::Victory => self.victory(ctx),
+            _ => {
+                self.systems.entry(current_state).and_modify(|schedule| schedule.execute(&mut self.ecs, &mut self.resources));
+            },
         }
         render_draw_buffer(ctx).expect("Render error");
 
@@ -94,6 +95,13 @@ impl State {
         Self { ecs, resources, systems }
     }
 
+    fn reset_game_state(&mut self) {
+        let new_game = State::new();
+        self.ecs = new_game.ecs;
+        self.resources = new_game.resources;
+        self.systems = new_game.systems;
+    }
+
     fn game_over(&mut self, ctx: &mut BTerm) {
         ctx.set_active_console(2);
         
@@ -105,10 +113,21 @@ impl State {
         ctx.print_color_centered(9, GREEN, BLACK, "Press 1 to play again.");
 
         if let Some(VirtualKeyCode::Key1) = ctx.key {
-            let new_game = State::new();
-            self.ecs = new_game.ecs;
-            self.resources = new_game.resources;
-            self.systems = new_game.systems;
+            self.reset_game_state();
+        }
+    }
+
+    fn victory(&mut self, ctx: &mut BTerm) {
+        ctx.set_active_console(2);
+        
+        ctx.print_color_centered(2, GREEN, BLACK, "You have won!");
+        ctx.print_color_centered(4, WHITE, BLACK, "You put on the Amulet of Yala and feel its power course through your veins.");
+
+        ctx.print_color_centered(5, YELLOW, BLACK, "Your town is saved, and you can return to your normal life");
+        ctx.print_color_centered(6, GREEN, BLACK, "Press 1 to play again.");
+
+        if let Some(VirtualKeyCode::Key1) = ctx.key {
+            self.reset_game_state();
         }
     }
 }
