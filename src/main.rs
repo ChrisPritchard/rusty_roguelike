@@ -48,8 +48,12 @@ impl GameState for State {
         self.resources.insert(Point::from_tuple(ctx.mouse_pos()));
 
         let current_state = self.resources.get::<TurnState>().unwrap().clone();
-        self.systems.entry(current_state).and_modify(|schedule| 
-            schedule.execute(&mut self.ecs, &mut self.resources));
+        if current_state == TurnState::GameOver {
+            self.game_over(ctx)
+        } else {
+            self.systems.entry(current_state).and_modify(|schedule| 
+                schedule.execute(&mut self.ecs, &mut self.resources));
+        }
         render_draw_buffer(ctx).expect("Render error");
 
         if let Some(VirtualKeyCode::Escape) = ctx.key {
@@ -86,6 +90,24 @@ impl State {
         ]);
 
         Self { ecs, resources, systems }
+    }
+
+    fn game_over(&mut self, ctx: &mut BTerm) {
+        ctx.set_active_console(2);
+        
+        ctx.print_color_centered(2, RED, BLACK, "Your quest has ended");
+        ctx.print_color_centered(4, WHITE, BLACK, "Slain by a monster, your hero's journey has come to a premature end.");
+        ctx.print_color_centered(5, WHITE, BLACK, "The Amulet of Yala remains unclaimed, and your home town is not saved.");
+
+        ctx.print_color_centered(8, YELLOW, BLACK, "Don't worry, you can always try again with a new hero.");
+        ctx.print_color_centered(9, GREEN, BLACK, "Press 1 to play again.");
+
+        if let Some(VirtualKeyCode::Key1) = ctx.key {
+            let new_game = State::new();
+            self.ecs = new_game.ecs;
+            self.resources = new_game.resources;
+            self.systems = new_game.systems;
+        }
     }
 }
 
