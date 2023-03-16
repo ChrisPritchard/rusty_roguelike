@@ -70,6 +70,8 @@ impl State {
         let map_builder = MapBuilder::new(&mut rng);
 
         spawn_player(&mut ecs, map_builder.player_start);
+        spawn_amulet_of_yara(&mut ecs, map_builder.amulet_start);
+
         map_builder.rooms.iter().skip(1).for_each(|r| {
             let pos = r.center();
             match rng.roll_dice(1, 10) {

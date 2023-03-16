@@ -9,7 +9,8 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
                 color: ColorPair::new(WHITE, BLACK),
                 glyph: to_cp437('@'),
             },
-            Health::new(10)
+            Name("You".to_string()),
+            Health::new(10),
         )
     );
 }
@@ -58,6 +59,21 @@ pub fn spawn_orc(ecs: &mut World, pos: Point) {
             },
             Name("Orc".to_string()),
             Health::new(2)
+        )
+    );
+}
+
+pub fn spawn_amulet_of_yara(ecs: &mut World, pos: Point) {
+    ecs.push(
+        (
+            Item,
+            AmuletOfYara,
+            pos,
+            Render{
+                color: ColorPair::new(WHITE, BLACK),
+                glyph: to_cp437('|')
+            },
+            Name("Amulet of Yara".to_string()),
         )
     );
 }
