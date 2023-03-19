@@ -11,6 +11,7 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
             },
             Name("You".to_string()),
             Health::new(10),
+            FieldOfView::new(8),
         )
     );
 }
@@ -26,7 +27,8 @@ pub fn spawn_goblin(ecs: &mut World, pos: Point) {
                 glyph: to_cp437('g')
             },
             Name("Goblin".to_string()),
-            Health::new(1)
+            Health::new(1),
+            FieldOfView::new(6),
         )
     );
 }
@@ -42,7 +44,8 @@ pub fn spawn_drunk_goblin(ecs: &mut World, pos: Point) {
                 glyph: to_cp437('g')
             },
             Name("Drunk Goblin".to_string()),
-            Health::new(2)
+            Health::new(2),
+            FieldOfView::new(4),
         )
     );
 }
@@ -58,7 +61,8 @@ pub fn spawn_orc(ecs: &mut World, pos: Point) {
                 glyph: to_cp437('o')
             },
             Name("Orc".to_string()),
-            Health::new(2)
+            Health::new(2),
+            FieldOfView::new(6),
         )
     );
 }

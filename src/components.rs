@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 pub use crate::prelude::*;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -39,6 +41,27 @@ impl Health {
 #[repr(transparent)]
 #[derive(Clone, PartialEq)]
 pub struct Name(pub String);
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct FieldOfView {
+    pub visible_tiles: HashSet<Point>,
+    pub radius: i32,
+    pub is_dirty: bool,
+}
+
+impl FieldOfView {
+    pub fn new(view_radius: i32) -> Self {
+        Self {
+            visible_tiles: HashSet::new(),
+            radius: view_radius,
+            is_dirty: true
+        }
+    }
+
+    pub fn clone_dirty(&self) -> Self {
+        Self::new(self.radius)
+    }
+}
 
 // these below are 'messages', components added to otherwise empty entities that a read and then removed
 

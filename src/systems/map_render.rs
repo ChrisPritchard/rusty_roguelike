@@ -1,9 +1,13 @@
 use crate::prelude::*;
 
 #[system]
+#[read_component(FieldOfView)]
 pub fn map_render(
+    ecs: &SubWorld,
     #[resource] map: &Map,
     #[resource] camera: &Camera) {
+
+    let fov = <&FieldOfView>::query().filter(component::<Player>()).iter(ecs).nth(0).unwrap();
 
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(0);
@@ -12,7 +16,7 @@ pub fn map_render(
         for x in camera.left_x..camera.right_x {
             let p = Point::new(x, y);
             let offset = Point::new(camera.left_x, camera.top_y);
-            if !map.in_bounds(p) {
+            if !map.in_bounds(p) || !fov.visible_tiles.contains(&p) {
                 continue;
             }
             
