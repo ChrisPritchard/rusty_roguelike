@@ -4,6 +4,8 @@ use crate::prelude::*;
 #[read_component(Point)]
 #[read_component(Name)]
 #[read_component(Health)]
+#[read_component(FieldOfView)]
+#[read_component(Player)]
 pub fn tooltips(
     ecs: &SubWorld,
     #[resource] mouse_pos: &Point,
@@ -14,6 +16,11 @@ pub fn tooltips(
     let map_pos = *mouse_pos + offset;
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(2);
+
+    let visible = <(&Player, &FieldOfView)>::query().iter(ecs).map(|(_, f)| &f.visible_tiles).nth(0).unwrap();
+    if !visible.contains(&map_pos) {
+        return;
+    }
 
     positions
         .iter(ecs).filter(|(_, pos, _)| **pos == map_pos)
