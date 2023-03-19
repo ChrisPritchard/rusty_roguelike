@@ -14,11 +14,15 @@ pub fn map_idx(x: i32, y:i32) -> usize {
 
 pub struct Map {
     pub tiles: Vec<TileType>,
+    pub revealed: Vec<bool>,
 }
 
 impl Map {
     pub fn new() -> Map {
-        Self { tiles: vec![TileType::Floor; NUM_TILES] }
+        Self { 
+            tiles: vec![TileType::Floor; NUM_TILES], 
+            revealed: vec![false; NUM_TILES],
+        }
     }
 
     pub fn in_bounds(&self, p: Point) -> bool {
