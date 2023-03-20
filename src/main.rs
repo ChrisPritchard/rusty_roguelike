@@ -73,12 +73,11 @@ impl State {
         spawn_player(&mut ecs, map_builder.player_start);
         spawn_amulet_of_yara(&mut ecs, map_builder.amulet_start);
 
-        map_builder.rooms.iter().skip(1).for_each(|r| {
-            let pos = r.center();
+        map_builder.monster_spawns.iter().for_each(|pos| {
             match rng.roll_dice(1, 10) {
-                1..=6 => spawn_goblin(&mut ecs, pos),
-                7..=8 => spawn_drunk_goblin(&mut ecs, pos),
-                _ => spawn_orc(&mut ecs, pos)
+                1..=6 => spawn_goblin(&mut ecs, *pos),
+                7..=8 => spawn_drunk_goblin(&mut ecs, *pos),
+                _ => spawn_orc(&mut ecs, *pos)
             };
         });
         
