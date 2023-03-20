@@ -66,13 +66,7 @@ fn build_corridors(mb: &mut MapBuilder, rng: &mut RandomNumberGenerator) {
 
 impl MapArchitect for RoomsArchitect {
     fn new(&self, rng: &mut RandomNumberGenerator) -> MapBuilder {
-        let mut mb = MapBuilder{
-            map: Map::new(),
-            rooms: Vec::new(),
-            player_start: Point::zero(),
-            amulet_start: Point::zero(),
-            monster_spawns: Vec::new(),
-        };
+        let mut mb = MapBuilder::blank();
         mb.fill(TileType::Wall);
         build_random_rooms(&mut mb, rng);
         build_corridors(&mut mb, rng);

@@ -4,6 +4,7 @@ use self::rooms::RoomsArchitect;
 
 mod empty;
 mod rooms;
+mod cellular_automata;
 
 trait MapArchitect {
     fn new(&self, rng: &mut RandomNumberGenerator) -> MapBuilder;
@@ -18,6 +19,16 @@ pub struct MapBuilder {
 }
 
 impl MapBuilder {
+    fn blank() -> Self {
+        Self {
+            map: Map::new(),
+            rooms: Vec::new(),
+            player_start: Point::zero(),
+            amulet_start: Point::zero(),
+            monster_spawns: Vec::new(),
+        }
+    }
+
     fn fill(&mut self, tile: TileType) {
         self.map.tiles.iter_mut().for_each(|t| *t = tile);
     }
