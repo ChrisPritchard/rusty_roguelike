@@ -4,7 +4,7 @@ use super::MapArchitect;
 pub struct EmptyArchitect {}
 
 impl MapArchitect for EmptyArchitect {
-    fn new(&self, rng: &mut RandomNumberGenerator) -> MapBuilder {
+    fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder {
         let mut mb = MapBuilder::blank();
         mb.fill(TileType::Floor);
         mb.player_start = Point::new(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);

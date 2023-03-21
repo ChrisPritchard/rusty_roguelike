@@ -65,7 +65,7 @@ fn build_corridors(mb: &mut MapBuilder, rng: &mut RandomNumberGenerator) {
 }
 
 impl MapArchitect for RoomsArchitect {
-    fn new(&self, rng: &mut RandomNumberGenerator) -> MapBuilder {
+    fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder {
         let mut mb = MapBuilder::blank();
         mb.fill(TileType::Wall);
         build_random_rooms(&mut mb, rng);

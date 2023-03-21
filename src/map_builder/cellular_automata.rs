@@ -52,6 +52,9 @@ impl CellularAutomataArchitect {
         let mut closest_idx = 0;
         let mut closest_dist = f32::MAX;
         for idx in 0..map.tiles.len() {
+            if map.tiles[idx] != TileType::Floor {
+                continue;
+            }
             let point = map.index_to_point2d(idx);
             let dist = DistanceAlg::Pythagoras.distance2d(center, point);
             if dist < closest_dist {
@@ -64,8 +67,16 @@ impl CellularAutomataArchitect {
 }
 
 impl MapArchitect for CellularAutomataArchitect {
-    fn new(&self, rng: &mut RandomNumberGenerator) -> MapBuilder {
-        let mb = MapBuilder::blank();
+    fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder {
+        let mut mb = MapBuilder::blank();
+        self.random_noise_map(rng, &mut mb.map);
+        for _ in 0..10 {
+            self.iteration(&mut mb.map);
+        }
+        let start = self.find_start(&mb.map);
+        mb.player_start = start;
+        mb.monster_spawns = mb.spawn_monsters(&start, rng);
+        mb.amulet_start = mb.find_most_distant();
         mb
     }
 }
