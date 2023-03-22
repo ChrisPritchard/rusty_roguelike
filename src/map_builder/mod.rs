@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-use self::drunkards_walk::DrunkardsWalkArchitect;
+use self::{drunkards_walk::DrunkardsWalkArchitect, cellular_automata::CellularAutomataArchitect, rooms::RoomsArchitect};
 
 const NUM_MONSTERS: usize = 50;
 
@@ -72,7 +72,11 @@ impl MapBuilder {
     }
 
     pub fn new(rng: &mut RandomNumberGenerator) -> Self {
-        let mut architect = DrunkardsWalkArchitect {};
+        let mut architect: Box<dyn MapArchitect> = match rng.range(0, 3) {
+            0 => Box::new(DrunkardsWalkArchitect {}),
+            1 => Box::new(CellularAutomataArchitect {}),
+            _ => Box::new(RoomsArchitect {}),
+        };
         architect.new(rng)
     }
 }
