@@ -8,6 +8,7 @@ mod empty;
 mod rooms;
 mod cellular_automata;
 mod drunkards_walk;
+mod prefab;
 
 trait MapArchitect {
     fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder;
@@ -36,12 +37,8 @@ impl MapBuilder {
         self.map.tiles.iter_mut().for_each(|t| *t = tile);
     }
 
-    fn find_most_distant(&mut self) -> Point {
-        let dijkstra_map = DijkstraMap::new(
-            SCREEN_WIDTH, SCREEN_HEIGHT, 
-            &vec![self.map.point2d_to_index(self.player_start)], 
-            &self.map, 
-            1024.);
+    fn find_most_distant(&mut self, from: Point) -> Point {
+        let dijkstra_map = self.map.dijstra_map(from);
         let index = 
             dijkstra_map.map.iter().enumerate()
             .filter(|(_, dist)| **dist < f32::MAX)

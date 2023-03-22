@@ -72,8 +72,7 @@ impl MapArchitect for RoomsArchitect {
         build_corridors(&mut mb, rng);
  
         mb.player_start = mb.rooms[0].center();
-        let furthest = mb.find_most_distant();
-        mb.amulet_start = furthest;
+        mb.amulet_start = mb.find_most_distant(mb.player_start);
 
         for r in mb.rooms.iter().skip(1) {
             mb.monster_spawns.push(r.center());

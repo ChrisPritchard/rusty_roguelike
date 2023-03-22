@@ -39,6 +39,11 @@ impl Map {
         } 
         Some(map_idx(p.x, p.y))
     }
+
+    pub fn dijstra_map(&self, from: Point) -> DijkstraMap {
+        let starts = vec![self.point2d_to_index(from)];
+        DijkstraMap::new(SCREEN_WIDTH, SCREEN_HEIGHT, &starts, self, 1024.)
+    }
 }
 
 impl BaseMap for Map {
