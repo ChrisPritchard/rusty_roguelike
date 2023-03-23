@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-use self::{drunkards_walk::DrunkardsWalkArchitect, cellular_automata::CellularAutomataArchitect, rooms::RoomsArchitect};
+use self::{drunkards_walk::DrunkardsWalkArchitect, cellular_automata::CellularAutomataArchitect, rooms::RoomsArchitect, prefab::apply_prefab};
 
 const NUM_MONSTERS: usize = 50;
 
@@ -74,6 +74,8 @@ impl MapBuilder {
             1 => Box::new(CellularAutomataArchitect {}),
             _ => Box::new(RoomsArchitect {}),
         };
-        architect.new(rng)
+        let mut mb = architect.new(rng);
+        apply_prefab(&mut mb, rng);
+        mb
     }
 }

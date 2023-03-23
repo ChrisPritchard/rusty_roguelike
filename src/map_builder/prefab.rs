@@ -42,4 +42,28 @@ pub fn apply_prefab(mb: &mut MapBuilder, rng: &mut RandomNumberGenerator) {
         }
         attempts += 1;
     }
+
+    if placement.is_none() {
+        return;
+    }
+
+    let placement = placement.unwrap();
+    let fort_chars = FORTRESS.0.chars().filter(|c| *c != '\r' && *c != '\n').collect::<Vec<char>>();
+    let mut i = 0;
+    for ty in placement.y..placement.y + FORTRESS.2 {
+        for tx in placement.x..placement.x + FORTRESS.1 {
+            let idx = map_idx(tx, ty);
+            let c = fort_chars[i];
+            match c {
+                'M' => {
+                    mb.map.tiles[idx] = TileType::Floor;
+                    mb.monster_spawns.push(Point::new(tx, ty));
+                },
+                '-' => mb.map.tiles[idx] = TileType::Floor,
+                '#' => mb.map.tiles[idx] = TileType::Wall,
+                _ => (),
+            }
+            i += 1;
+        }
+    }
 }
