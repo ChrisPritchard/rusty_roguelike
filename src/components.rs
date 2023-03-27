@@ -21,6 +21,14 @@ pub struct Item;
 pub struct AmuletOfYara;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
+pub struct ProvidesHealing {
+    pub amount: i32,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct ProvidesDungeonMap;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct MovesRandomly;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -64,7 +72,6 @@ impl FieldOfView {
 }
 
 // these below are 'messages', components added to otherwise empty entities that a read and then removed
-
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct WantsToMove {

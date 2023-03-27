@@ -81,3 +81,43 @@ pub fn spawn_amulet_of_yara(ecs: &mut World, pos: Point) {
         )
     );
 }
+
+pub fn spawn_health_potion(ecs: &mut World, pos: Point) {
+    ecs.push(
+        (
+            Item,
+            ProvidesHealing{amount: 6},
+            pos,
+            Render{
+                color: ColorPair::new(WHITE, BLACK),
+                glyph: to_cp437('!')
+            },
+            Name("Healing Potion".to_string()),
+        )
+    );
+}
+
+pub fn spawn_magic_mapper(ecs: &mut World, pos: Point) {
+    ecs.push(
+        (
+            Item,
+            ProvidesDungeonMap,
+            pos,
+            Render{
+                color: ColorPair::new(WHITE, BLACK),
+                glyph: to_cp437('{')
+            },
+            Name("Dungeon Map".to_string()),
+        )
+    );
+}
+
+pub fn spawn_entity(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Point) {
+    match rng.roll_dice(1, 6) {
+        1 => spawn_health_potion(ecs, pos),
+        2 => spawn_magic_mapper(ecs, pos),
+        3 => spawn_orc(ecs, pos),
+        4 => spawn_drunk_goblin(ecs, pos),
+        _ => spawn_goblin(ecs, pos)
+    }
+}
