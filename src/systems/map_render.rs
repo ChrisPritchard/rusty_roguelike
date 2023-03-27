@@ -5,7 +5,8 @@ use crate::prelude::*;
 pub fn map_render(
     ecs: &SubWorld,
     #[resource] map: &Map,
-    #[resource] camera: &Camera) {
+    #[resource] camera: &Camera,
+    #[resource] map_theme: &Box<dyn  MapTheme>) {
 
     let fov = <&FieldOfView>::query().filter(component::<Player>()).iter(ecs).nth(0).unwrap();
 
@@ -20,10 +21,7 @@ pub fn map_render(
                 continue;
             }
             
-            let glyph = match map.tiles[map_idx(x, y)] {
-                TileType::Floor => to_cp437('.'),
-                TileType::Wall => to_cp437('#'),
-            };
+            let glyph = map_theme.tile_to_render(map.tiles[map_idx(x, y)]);
 
             if fov.visible_tiles.contains(&p) {
                 draw_batch.set(p - offset, ColorPair::new(WHITE, BLACK), glyph);
