@@ -18,6 +18,9 @@ pub struct Enemy;
 pub struct Item;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Carried(pub Entity);
+
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct AmuletOfYara;
 
 #[derive(Clone, Copy, Debug, PartialEq)]

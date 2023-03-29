@@ -4,6 +4,8 @@ use crate::prelude::*;
 #[read_component(Point)]
 #[read_component(Player)]
 #[write_component(Health)]
+#[read_component(Item)]
+#[write_component(Carried)]
 pub fn player_input(
         ecs: &mut SubWorld, 
         commands: &mut CommandBuffer,
@@ -19,6 +21,10 @@ pub fn player_input(
         VirtualKeyCode::Right => Point::new(1, 0),
         VirtualKeyCode::Up => Point::new(0, -1),
         VirtualKeyCode::Down => Point::new(0, 1),
+        VirtualKeyCode::G => {
+            try_grab_item(ecs, commands);
+            Point::zero()
+        }
         _ => Point::zero(),
     };
 
@@ -42,4 +48,13 @@ pub fn player_input(
     }
     
     *turn_state = TurnState::PlayerTurn;
+}
+
+fn try_grab_item(ecs: &mut SubWorld, commands: &mut CommandBuffer) {
+    let (player, player_pos) = <(Entity, &Point)>::query().filter(component::<Player>()).iter(ecs).find_map(|(e, p)| Some((*e, *p))).unwrap();
+
+    <(Entity, &Item, &Point)>::query().iter(ecs).filter(|(_, _, &pos)| pos == player_pos).for_each(|(e, _, _)| {
+        commands.remove_component::<Point>(*e);
+        commands.add_component(*e, Carried(player));
+    });
 }
