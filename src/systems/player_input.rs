@@ -25,6 +25,10 @@ pub fn player_input(
             try_grab_item(ecs, commands);
             Point::zero()
         }
+        n if n >= VirtualKeyCode::Key1 || n <= VirtualKeyCode::Key9 => {
+            use_item(n as usize, ecs, commands);
+            Point::zero()
+        }
         _ => Point::zero(),
     };
 
@@ -57,4 +61,20 @@ fn try_grab_item(ecs: &mut SubWorld, commands: &mut CommandBuffer) {
         commands.remove_component::<Point>(*e);
         commands.add_component(*e, Carried(player));
     });
+}
+
+fn use_item(n: usize, ecs: &mut SubWorld, commands: &mut CommandBuffer) {
+    let player = <(Entity, &Player)>::query().iter(ecs).find_map(|(e, _)| Some(*e)).unwrap();
+    let item = <(Entity, &Item, &Carried)>::query().iter(ecs)
+        .filter(|(_, _, c)| c.0 == player)
+        .enumerate()
+        .filter(|(item_count, _)| *item_count == n)
+        .find_map(|(_, (e, _, _))| Some(*e));
+
+    if let Some(item) = item {
+        commands.push(((), ActivateItem {
+            used_by: player,
+            item
+        }));
+    }
 }
