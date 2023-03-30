@@ -3,7 +3,6 @@ use crate::prelude::*;
 #[system]
 #[read_component(Point)]
 #[read_component(Player)]
-#[write_component(Health)]
 #[read_component(Item)]
 #[write_component(Carried)]
 pub fn player_input(
@@ -33,9 +32,6 @@ pub fn player_input(
     };
 
     if delta == Point::zero() {
-        <(Entity, &mut Health)>::query().filter(component::<Player>()).iter_mut(ecs)
-            .for_each(|(_, h)| (*h).current = ((*h).current + 1).min((*h).max));
-        *turn_state = TurnState::PlayerTurn;
         return
     }
 
