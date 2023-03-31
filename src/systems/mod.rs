@@ -18,6 +18,8 @@ pub fn build_input_scheduler() -> Schedule {
         .add_system(player_input::player_input_system())
         .add_system(fov::fov_system())
         .flush()
+        .add_system(use_items::use_items_system())
+        .flush()
         .add_system(map_render::map_render_system())
         .add_system(entity_render::entity_render_system())
         .add_system(hud::hud_system())
