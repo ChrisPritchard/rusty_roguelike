@@ -16,9 +16,9 @@ pub fn hud(ecs: &SubWorld) {
     draw_batch.bar_horizontal(Point::zero(), SCREEN_WIDTH*2, health.current, health.max, ColorPair::new(RED, BLACK));
     draw_batch.print_color_centered(0, format!( "Health: {} / {}", health.current, health.max), ColorPair::new(WHITE, RED));
 
-    let player = <(Entity, &Player)>::query().iter(ecs).find_map(|(e, _)| Some(*e)).unwrap();
+    let (player_entity, map_level) = <(Entity, &Player)>::query().iter(ecs).find_map(|(e, p)| Some((*e, p.map_level))).unwrap();
     let mut y = 3;
-    <(&Item, &Name, &Carried)>::query().iter(ecs).filter(|(_, _, carried)| carried.0 == player).for_each(|(_, name, _)| {
+    <(&Item, &Name, &Carried)>::query().iter(ecs).filter(|(_, _, carried)| carried.0 == player_entity).for_each(|(_, name, _)| {
         draw_batch.print(Point::new(3, y), format!("{} : {}", y-2, &name.0));
         y += 1;
     });
@@ -26,6 +26,8 @@ pub fn hud(ecs: &SubWorld) {
     if y > 3 {
         draw_batch.print_color(Point::new(3, 2), "Items carried", ColorPair::new(YELLOW, BLACK));
     }
+
+    draw_batch.print_color_right(Point::new(SCREEN_WIDTH*2, 1), format!("Dungeon Level: {}", map_level+1), ColorPair::new(YELLOW, BLACK));
 
     draw_batch.submit(10000).expect("batch error");
 }
