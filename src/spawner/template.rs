@@ -76,5 +76,12 @@ impl Templates {
                 }
             });
         }
+
+        if let Some(damage) = &template.base_damage {
+            command_buffer.add_component(entity, Damage(*damage));
+            if template.entity_type == EntityType::Item {
+                command_buffer.add_component(entity, Weapon);
+            }
+        }
     }
 }

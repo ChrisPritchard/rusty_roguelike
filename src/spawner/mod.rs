@@ -21,6 +21,7 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
             Name("You".to_string()),
             Health::new(10),
             FieldOfView::new(8),
+            Damage(1),
         )
     );
 }

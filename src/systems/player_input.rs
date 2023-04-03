@@ -4,6 +4,7 @@ use crate::prelude::*;
 #[read_component(Point)]
 #[read_component(Player)]
 #[read_component(Item)]
+#[read_component(Weapon)]
 #[write_component(Carried)]
 pub fn player_input(
         ecs: &mut SubWorld, 
@@ -53,9 +54,16 @@ pub fn player_input(
 fn try_grab_item(ecs: &mut SubWorld, commands: &mut CommandBuffer) {
     let (player, player_pos) = <(Entity, &Point)>::query().filter(component::<Player>()).iter(ecs).find_map(|(e, p)| Some((*e, *p))).unwrap();
 
-    <(Entity, &Item, &Point)>::query().iter(ecs).filter(|(_, _, &pos)| pos == player_pos).for_each(|(e, _, _)| {
-        commands.remove_component::<Point>(*e);
-        commands.add_component(*e, Carried(player));
+    <(Entity, &Item, &Point)>::query().iter(ecs).filter(|(_, _, &pos)| pos == player_pos).for_each(|(entity, _, _)| {
+        commands.remove_component::<Point>(*entity);
+        commands.add_component(*entity, Carried(player));
+
+        let entry_ref = ecs.entry_ref(*entity).unwrap();
+        if entry_ref.get_component::<Weapon>().is_ok() {
+            <(Entity, &Carried, &Weapon)>::query().iter(ecs).filter(|(_, c, _)| c.0 == player).for_each(|(weapon_entity, _, _)| {
+                commands.remove(*weapon_entity);
+            });
+        }
     });
 }
 
@@ -68,6 +76,10 @@ fn use_item(n: usize, ecs: &mut SubWorld, commands: &mut CommandBuffer) {
         .find_map(|(_, (e, _, _))| Some(*e));
 
     if let Some(item) = item {
+        let entry_ref = ecs.entry_ref(item).unwrap();
+        if entry_ref.get_component::<Weapon>().is_ok() {
+            return; // can't use up weapons
+        }
         commands.push(((), ActivateItem {
             used_by: player,
             item
