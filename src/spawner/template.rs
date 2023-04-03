@@ -11,7 +11,7 @@ pub struct Template {
     pub frequency: i32,
     pub name: String,
     pub glyph: char,
-    pub provides: Option<Vec<(String, i32)>>,
+    pub behaviour: Option<Vec<(String, i32)>>,
     pub hp: Option<i32>,
 }
 
@@ -60,17 +60,18 @@ impl Templates {
             EntityType::Enemy => {
                 command_buffer.add_component(entity, Enemy);
                 command_buffer.add_component(entity, FieldOfView::new(6));
-                command_buffer.add_component(entity, ChasingPlayer);
                 command_buffer.add_component(entity, Health::new(template.hp.unwrap()));
             }
         }
 
-        if let Some(effects) = &template.provides {
+        if let Some(effects) = &template.behaviour {
             effects.iter().for_each(|(effect, n)| {
                 match effect.as_str() {
                     "Healing" => command_buffer.add_component(entity, ProvidesHealing{amount: *n}),
                     "MagicMap" => command_buffer.add_component(entity, ProvidesDungeonMap),
-                    _ => println!("unknown item effect: {}", effect)
+                    "ChasesPlayer" => command_buffer.add_component(entity, ChasingPlayer),
+                    "Drunk" => command_buffer.add_component(entity, MovesRandomly),
+                    _ => println!("unknown entity behaviour: {}", effect)
                 }
             });
         }
