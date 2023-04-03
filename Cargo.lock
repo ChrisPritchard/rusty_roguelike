@@ -576,16 +576,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9ea835d29036a4087793836fa931b08837ad5e957da9e23886b29586fb9b6650"
 
 [[package]]
-name = "dungeoncrawl"
-version = "0.1.0"
-dependencies = [
- "bracket-lib",
- "legion",
- "ron",
- "serde",
-]
-
-[[package]]
 name = "dwrote"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1495,6 +1485,16 @@ checksum = "300a51053b1cb55c80b7a9fde4120726ddf25ca241a1cbb926626f62fb136bff"
 dependencies = [
  "base64",
  "bitflags",
+ "serde",
+]
+
+[[package]]
+name = "rusty_roguelike"
+version = "0.1.0"
+dependencies = [
+ "bracket-lib",
+ "legion",
+ "ron",
  "serde",
 ]
 
