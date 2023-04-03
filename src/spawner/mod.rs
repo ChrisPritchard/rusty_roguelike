@@ -25,23 +25,6 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
     );
 }
 
-// pub fn spawn_drunk_goblin(ecs: &mut World, pos: Point) {
-//     ecs.push(
-//         (
-//             Enemy,
-//             MovesRandomly,
-//             pos,
-//             Render{
-//                 color: ColorPair::new(WHITE, BLACK),
-//                 glyph: to_cp437('g')
-//             },
-//             Name("Drunk Goblin".to_string()),
-//             Health::new(2),
-//             FieldOfView::new(4),
-//         )
-//     );
-// }
-
 pub fn spawn_amulet_of_yara(ecs: &mut World, pos: Point) {
     ecs.push(
         (

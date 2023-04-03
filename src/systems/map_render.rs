@@ -26,7 +26,7 @@ pub fn map_render(
             if fov.visible_tiles.contains(&p) {
                 draw_batch.set(p - offset, ColorPair::new(WHITE, BLACK), glyph);
             } else if map.revealed[map_idx(x, y)] {
-                draw_batch.set(p - offset, ColorPair::new((40, 40, 40), BLACK), glyph);
+                draw_batch.set(p - offset, ColorPair::new((100, 100, 100), BLACK), glyph);
             }
         }
     }
